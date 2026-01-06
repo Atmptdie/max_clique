@@ -1,0 +1,5 @@
+data/*
+build/*
+.vscode/*
+.clang-format
+.venv/*
