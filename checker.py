@@ -4,6 +4,8 @@ from collections import defaultdict
 import json
 import tqdm
 
+import matplotlib.pyplot as plt
+
 
 def main():
     argparser = argparse.ArgumentParser()
@@ -37,12 +39,15 @@ def main():
     ), "Number of vertecies in answer is not equal to number of vertecies in intersections file"
 
     max_element = 0
+    powers = []
+
     for key, vertecies in tqdm.tqdm(data.items(), desc="keys loaded from answers"):
         max_element = max(max_element, max(vertecies))
+        powers.append(len(vertecies))
         for other_key, other_vertecies in data.items():
             if key == other_key:
                 continue
-
+            
             intersected = len(set(vertecies) & set(other_vertecies))
             intersections[int(key)][int(other_key)] = intersected
             intersections[int(other_key)][int(key)] = intersected
@@ -60,6 +65,14 @@ def main():
 
     print("All checks passed!")
     print(f"Solution power: {max_element}")
+    print(f"Subsets avg power: {round(sum(powers) / len(powers), 2)}")
+
+    plt.hist(powers, bins=50)
+    plt.xlabel("Power of subset")
+    plt.ylabel("Count")
+    plt.title("Distribution of powers of subsets")
+    plt.grid(True)
+    plt.savefig("./images/powers.png")
 
 
 if __name__ == "__main__":
