@@ -20,6 +20,8 @@ def main():
     args = argparser.parse_args()
 
     actual_intersections = defaultdict(dict)
+    baseline_power = 0
+
     with open(args.inter, "r") as f:
         reader = csv.reader(f, lineterminator="\n")
         rows = list(reader)[1:]
@@ -27,6 +29,7 @@ def main():
             i, j = map(int, ij.split("_"))
             actual_intersections[i][j] = int(value)
             actual_intersections[j][i] = int(value)
+            baseline_power += int(value)
 
     num_vertecies = len(actual_intersections[0]) + 1
 
@@ -65,6 +68,7 @@ def main():
 
     print("All checks passed!")
     print(f"Solution power: {max_element}")
+    print(f"Baseline estimation power: {baseline_power}")
     print(f"Subsets avg power: {round(sum(powers) / len(powers), 2)}")
 
     plt.hist(powers, bins=50)
