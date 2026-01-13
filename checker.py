@@ -20,7 +20,7 @@ def main():
     args = argparser.parse_args()
 
     actual_intersections = defaultdict(dict)
-    baseline_power = 0
+    baseline_cardinality = 0
 
     with open(args.inter, "r") as f:
         reader = csv.reader(f, lineterminator="\n")
@@ -29,7 +29,7 @@ def main():
             i, j = map(int, ij.split("_"))
             actual_intersections[i][j] = int(value)
             actual_intersections[j][i] = int(value)
-            baseline_power += int(value)
+            baseline_cardinality += int(value)
 
     num_vertecies = len(actual_intersections[0]) + 1
 
@@ -42,11 +42,11 @@ def main():
     ), "Number of vertecies in answer is not equal to number of vertecies in intersections file"
 
     max_element = 0
-    powers = []
+    cardinalities = []
 
     for key, vertecies in tqdm.tqdm(data.items(), desc="keys loaded from answers"):
         max_element = max(max_element, max(vertecies))
-        powers.append(len(vertecies))
+        cardinalities.append(len(vertecies))
         for other_key, other_vertecies in data.items():
             if key == other_key:
                 continue
@@ -67,16 +67,16 @@ def main():
             ), f"Intersections are not equal for {key} and {other_key}"
 
     print("All checks passed!")
-    print(f"Solution power: {max_element}")
-    print(f"Baseline estimation power: {baseline_power}")
-    print(f"Subsets avg power: {round(sum(powers) / len(powers), 2)}")
+    print(f"Solution cardinality: {max_element}")
+    print(f"Baseline estimation cardinality: {baseline_cardinality}")
+    print(f"Subsets avg cardinality: {round(sum(cardinalities) / len(cardinalities), 2)}")
 
-    plt.hist(powers, bins=50)
-    plt.xlabel("Power of subset")
+    plt.hist(cardinalities, bins=50)
+    plt.xlabel("cardinality of subset")
     plt.ylabel("Count")
-    plt.title("Distribution of powers of subsets")
+    plt.title("Distribution of cardinalities of subsets")
     plt.grid(True)
-    plt.savefig("./images/powers.png")
+    plt.savefig("./images/cardinalities.png")
 
 
 if __name__ == "__main__":
